@@ -55,7 +55,7 @@ You start with basic stats and a **Rusty Sword**. Navigate the world using direc
 
 1. **Clone the repository**
 ```bash
-   git clone https://github.com/yourusername/my-game.git
+   git clone https://github.com/yourusername/my-game.git](https://github.com/YazanAlAraaj/RPGGAME2.git
 ```
 2. **Open in Visual Studio** — open `MyGame.sln`
 3. **Build & Run** — press `F5` or click **Start**
