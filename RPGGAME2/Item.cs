@@ -8,5 +8,15 @@ namespace RPGGAME2
 {
     internal class Item
     {
+        public int ID {  get; set; }
+        public string Name { get; set; }
+        public string NamePlural { get; set; }
+
+        public Item (int ID, string Name, string NamePlural)
+        {
+            this.ID = ID;
+            this.Name = Name;
+            this.NamePlural = NamePlural;
+        }
     }
 }

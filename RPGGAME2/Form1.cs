@@ -14,23 +14,19 @@ namespace RPGGAME2
     public partial class rpggame1 : Form
     {
 
-        private Player _player = new Player();
+        private Player _player = new Player(100,0,1,100,100);
 
         public rpggame1()
         {
             InitializeComponent();
-            
-            _player.MaxHp = 100;
-            _player.CurrentHp = 100;
-            _player.Gold = 100;
-            _player.Level = 1;
-            _player.Experience = 0;
 
-            lblHitPoints.Text = _player.CurrentHp.ToString();
+            lblHitPoints.Text = _player.CurrentHP.ToString();
             lblGold.Text = _player.Gold.ToString();
             lblLevel.Text = _player.Level.ToString();
             lblExperience.Text = _player.Experience.ToString();
-            
+
+            Location location = new Location(1 , "Home" , "this is your home");
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -45,7 +41,7 @@ namespace RPGGAME2
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-          
+
             btnStart.Hide();
         }
 
@@ -63,8 +59,8 @@ namespace RPGGAME2
         {
 
         }
-        
-       
-        
+
+
+
     }
 }
