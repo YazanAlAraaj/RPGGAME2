@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPGGAME2
 {
-    internal class Weapon : Item
+    public class Weapon : Item
     {
         public int MaxDamage { get; set; }
         public int MinDamage { get; set; }

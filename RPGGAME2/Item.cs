@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPGGAME2
 {
-    internal class Item
+    public class Item
     {
         public int ID {  get; set; }
         public string Name { get; set; }
@@ -14,12 +14,12 @@ namespace RPGGAME2
 
         public Item RewardItem { get; set; }
 
-        public Item (int ID, string Name, string NamePlural, Item RewardItem)
+        public Item (int ID, string Name, string NamePlural)
         {
             this.ID = ID;
             this.Name = Name;
             this.NamePlural = NamePlural;
-            this.RewardItem = RewardItem;
+            
         }
     }
 }
