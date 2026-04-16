@@ -12,11 +12,14 @@ namespace RPGGAME2
         public string Name { get; set; }
         public string NamePlural { get; set; }
 
-        public Item (int ID, string Name, string NamePlural)
+        public Item RewardItem { get; set; }
+
+        public Item (int ID, string Name, string NamePlural, Item RewardItem)
         {
             this.ID = ID;
             this.Name = Name;
             this.NamePlural = NamePlural;
+            this.RewardItem = RewardItem;
         }
     }
 }

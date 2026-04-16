@@ -14,6 +14,8 @@ namespace RPGGAME2
         public int RewardedXP { get; set; }
         public int RewardedGold { get; set; }
 
+        public List<LootItems> LootItems { get; set; }
+
         public Monster(int ID, string name, int maxDamage, int rewardedXP, int rewardedGold,int CurrentHP,int MaxHP) : base(MaxHP,CurrentHP)
         {
             this.ID = ID;
@@ -21,6 +23,7 @@ namespace RPGGAME2
             this.MaxDamage = maxDamage;
             this.RewardedXP = rewardedXP;
             this.RewardedGold = rewardedGold;
+            LootItems = new List<LootItems>();
         }
     }
 }

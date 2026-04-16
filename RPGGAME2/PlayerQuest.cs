@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RPGGAME2
+{
+    internal class PlayerQuest
+    {
+        public Quest Details { get; set; }
+        public bool IsCompleted { get; set; }
+
+        public PlayerQuest(Quest Details, bool IsCompleted)
+        {
+            this.Details = Details;
+            IsCompleted = false;
+        }
+    }
+}
