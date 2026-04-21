@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace RPGGAME2
 {
-    internal class LootItems
+    public class LootItem
     {
         public Item Details { get; set; }
         public int DropPercentage { get; set; }
         public bool DefaultItem {  get; set; }
 
-        public Item (Item Details, int DropPercentage, bool DefaultItem)
+        public LootItem (Item Details, int DropPercentage, bool DefaultItem)
         {
             this.Details = Details;
             this.DropPercentage = DropPercentage;

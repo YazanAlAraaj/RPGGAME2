@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPGGAME2
 {
-    internal class Player : LivingCreature
+    public class Player : LivingCreature
     {
         public int Gold { get; set; }
         public int Experience { get; set; }

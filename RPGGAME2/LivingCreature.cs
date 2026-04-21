@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPGGAME2
 {
-    internal class LivingCreature
+    public class LivingCreature
     {
         public int MaxHP { get; set; }
         public int CurrentHP { get; set; }
