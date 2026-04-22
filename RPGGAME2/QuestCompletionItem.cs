@@ -11,7 +11,6 @@ namespace RPGGAME2
         public Item Details { get; set; }
         public int Quantity { get; set; }
 
-        
 
         public QuestCompletionItem(Item Details, int Quantity)
         {

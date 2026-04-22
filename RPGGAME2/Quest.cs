@@ -14,7 +14,9 @@ namespace RPGGAME2
         public int RewardedXP { get; set; }
         public int RewardedGold { get; set; }
 
-        public List<QuestCompletionItem> QuestCompeltionItem { get; set; }
+        public Item RewardItem { get; set; }
+
+        public List<QuestCompletionItem> QuestCompeltionItems { get; set; }
 
         public Quest(int ID,string Name , String Description , int RewardedXP, int RewardedGold)
         {
@@ -23,7 +25,7 @@ namespace RPGGAME2
             this.Description = Description;
             this.RewardedXP = RewardedXP;
             this.RewardedGold = RewardedGold;
-            QuestCompeltionItem = new List<QuestCompletionItem>();
+            QuestCompeltionItems = new List<QuestCompletionItem>();
         }
     }
 }

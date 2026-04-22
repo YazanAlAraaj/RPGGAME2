@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPGGAME2
 {
-    internal class HealingPotion : Item
+    public class HealingPotion : Item
     {
         public int AmountToHeal { get; set; }
 
