@@ -17,22 +17,24 @@ namespace RPGGAME2
         public const int Item_ID_Rusty_Sword = 1;
         public const int Item_ID_Rat_Tail = 2;
         public const int Item_ID_Healing_Potion = 3;
-        public const int Item_ID_Yazans_Sword = 99;
+        public const int Item_ID_Warrior_Sword = 4;
         //items end
         //--------------------------------------------------------------------------------------------------------------------
         //locations start
         public const int Location_ID_Home = 1;
         public const int Location_ID_TownSquare = 2;
+        public const int Location_ID_GraveYard = 3;
 
         //locations end
         //--------------------------------------------------------------------------------------------------------------------
         //quests start
         public const int Quest_ID_Clear_TownSquare = 1;
+        public const int Quest_ID_Kill_The_Warrior = 2;
         //quests end
         //--------------------------------------------------------------------------------------------------------------------
         //monsters start
         public const int Monster_ID_Rat = 1;
-
+        public const int Monster_ID_Warrior = 2;
         //monsters end
         //--------------------------------------------------------------------------------------------------------------------
 
@@ -46,16 +48,24 @@ namespace RPGGAME2
             //----------------------------------------------------------------------------------
             Items.Add(new HealingPotion(Item_ID_Healing_Potion, "Healing Potion", "Healing Potions", 10));
             //----------------------------------------------------------------------------------
+            Items.Add(new Weapon(Item_ID_Warrior_Sword, "Warrior's Sword", "Warrior's Swords", 8, 3));
+            //----------------------------------------------------------------------------------
+
 
         }
         private static void PopulateQuests()
         {
-            Quest ClearTownSquare = new Quest(Quest_ID_Clear_TownSquare, "ClearTownSquare", "Kill the rat to clear the town square", 15, 10);
+            //---------------------------------------------------------------------------------- 
+            Quest ClearTownSquare = new Quest(Quest_ID_Clear_TownSquare, "Clear Town Square", "Kill the rat to clear the town square", 15, 10);
             ClearTownSquare.QuestCompeltionItems.Add(new QuestCompletionItem(ItemByID(Item_ID_Rat_Tail),1));
             ClearTownSquare.RewardItem = ItemByID(Item_ID_Healing_Potion);
-            
-            
+            //---------------------------------------------------------------------------------- 
+            Quest KillTheWarrior = new Quest(Quest_ID_Kill_The_Warrior, "Kill the warrior", "Kill the warrior to get his sword", 20, 20);
+            KillTheWarrior.QuestCompeltionItems.Add(new QuestCompletionItem(ItemByID(Item_ID_Warrior_Sword), 1));
+            KillTheWarrior.RewardItem = ItemByID(Item_ID_Healing_Potion);
+            //---------------------------------------------------------------------------------- 
             Quests.Add(ClearTownSquare);
+            Quests.Add(KillTheWarrior);
         }
 
         private static void PopulateLocations()
@@ -63,27 +73,35 @@ namespace RPGGAME2
             //---------------------------------------------------------------------------------- //Declare locations first
             Location Home = new Location(Location_ID_Home, "Home", "This is your home");
             Location TownSquare = new Location(Location_ID_TownSquare, "Town Square", "Welcome to the town square you see a fountain");
+            Location GraveYard = new Location(Location_ID_GraveYard, "Grave Yard", "This Grave Yard is guarded by a warrior!");
             //---------------------------------------------------------------------------------- //Location headings 2nd
             Home.LocationToNorth = TownSquare;
             TownSquare.LocationToSouth = Home;
+            TownSquare.LocationToNorth = GraveYard;
+            GraveYard.LocationToSouth = TownSquare;
             //---------------------------------------------------------------------------------- //Monsters in location 3rd
             TownSquare.MonsterLivingHere = MonsterByID(Monster_ID_Rat);
             TownSquare.QuestAvailableHere = QuestByID(Quest_ID_Clear_TownSquare);
-            
+            GraveYard.MonsterLivingHere = MonsterByID(Monster_ID_Warrior);
+            GraveYard.QuestAvailableHere = QuestByID(Quest_ID_Kill_The_Warrior);
             //---------------------------------------------------------------------------------- //Then we ADD them
             Locations.Add(Home);
             Locations.Add(TownSquare);
+            Locations.Add(GraveYard);
         }
 
 
         private static void PopulateMonsters()
         {
-            //----------------------------------------------------------------------------------
+            //---------------------------------------------------------------------------------- // declare the Monster first and give it the parametrs
             Monster rat = new Monster(Monster_ID_Rat, "Rat", 2, 5, 5, 5, 5);
+            Monster Warrior = new Monster(Monster_ID_Warrior,"Warrior", 10, 20, 10, 10, 10);
+            //---------------------------------------------------------------------------------- // add the loot
             rat.LootTable.Add(new LootItem(ItemByID(Item_ID_Rat_Tail), 100, true));
+            Warrior.LootTable.Add(new LootItem(ItemByID(Item_ID_Warrior_Sword), 100, true));
+            //---------------------------------------------------------------------------------- // Add to list
             Monsters.Add(rat);
-            //----------------------------------------------------------------------------------
-
+            Monsters.Add(Warrior);
         }
 
         public static Item ItemByID(int ID)
