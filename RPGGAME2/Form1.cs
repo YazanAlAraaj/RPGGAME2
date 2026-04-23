@@ -60,7 +60,24 @@ namespace RPGGAME2
 
         }
 
+        private void cboWeapons1_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
+        }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUsePotion_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboPotions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
