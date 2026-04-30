@@ -12,6 +12,7 @@ namespace RPGGAME2
         public int Experience { get; set; }
         public int Level { get; set; }
 
+        public Location CurrentLocation { get; set;  }
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> PlayerQuests { get; set; }
 
