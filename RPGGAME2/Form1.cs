@@ -118,7 +118,7 @@ namespace RPGGAME2
                     return;
                 }
             }
-            
+
             _player.CurrentLocation = newLocation;
 
             btnNorth.Visible = (newLocation.LocationToNorth != null);
@@ -240,27 +240,26 @@ namespace RPGGAME2
 
                     }
                 }
-
-            }
-            else
-            {
-                rtbMessage.Text += "You Recieve The" + newLocation.QuestAvailableHere.Name + "Quest" + Environment.NewLine;
-                rtbMessage.Text += newLocation.QuestAvailableHere.Description;
-                rtbMessage.Text += "To complete it return with: " + Environment.NewLine;
-
-                foreach (QuestCompletionItem qci in newLocation.QuestAvailableHere.QuestCompeltionItems)
+                else
                 {
-                    if (qci.Quantity == 1)
-                    {
-                        rtbMessage.Text += qci.Quantity.ToString() + " " + qci.Details.Name + Environment.NewLine;
-                    }
-                    else
-                    {
+                    rtbMessage.Text += "You Recieve The" + newLocation.QuestAvailableHere.Name + "Quest" + Environment.NewLine;
+                    rtbMessage.Text += newLocation.QuestAvailableHere.Description;
+                    rtbMessage.Text += "To complete it return with: " + Environment.NewLine;
 
-                        rtbMessage.Text += qci.Quantity.ToString() + " " + qci.Details.NamePlural + Environment.NewLine;
+                    foreach (QuestCompletionItem qci in newLocation.QuestAvailableHere.QuestCompeltionItems)
+                    {
+                        if (qci.Quantity == 1)
+                        {
+                            rtbMessage.Text += qci.Quantity.ToString() + " " + qci.Details.Name + Environment.NewLine;
+                        }
+                        else
+                        {
+
+                            rtbMessage.Text += qci.Quantity.ToString() + " " + qci.Details.NamePlural + Environment.NewLine;
+                        }
                     }
+                    rtbMessage.Text = Environment.NewLine;
                 }
-                rtbMessage.Text = Environment.NewLine;
             }
 
             if (newLocation.MonsterLivingHere != null)
@@ -365,7 +364,7 @@ namespace RPGGAME2
                 }
             }
 
-            if(healingpotion.Count == 0)
+            if (healingpotion.Count == 0)
             {
                 cboPotions.Visible = false;
                 btnUsePotion.Visible = false;

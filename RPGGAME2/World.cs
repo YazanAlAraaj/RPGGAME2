@@ -148,9 +148,9 @@ namespace RPGGAME2
 
         static World()
         {
+            PopulateQuests();
             PopulateItems();
             PopulateMonsters();
-            PopulateQuests();
             PopulateLocations();
         }
 
