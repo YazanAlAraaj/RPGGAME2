@@ -6,6 +6,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -118,6 +119,7 @@ namespace RPGGAME2
                     return;
                 }
             }
+
 
             _player.CurrentLocation = newLocation;
 
