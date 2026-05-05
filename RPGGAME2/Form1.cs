@@ -104,22 +104,10 @@ namespace RPGGAME2
 
         private void MoveTo(Location newLocation)
         {
-            if (newLocation.ItemRequiredToEnter != null)
+            if (!_player.HasRequiredItemToEnterThisLocation(newLocation))
             {
-                bool PlayerHasRequiredItem = false;
-
-                foreach (InventoryItem item in _player.Inventory)
-                {
-                    PlayerHasRequiredItem = true;
-                    break;
-                }
-                if (!PlayerHasRequiredItem)
-                {
-                    rtbMessage.Text += "You must have a " + newLocation.ItemRequiredToEnter.Name + " to enter this location." + Environment.NewLine;
-                    return;
-                }
+                rtbMessage.Text = "You must have" + newLocation.ItemRequiredToEnter.Name + "to enter this location" + Environment.NewLine;
             }
-
 
             _player.CurrentLocation = newLocation;
 
@@ -137,69 +125,22 @@ namespace RPGGAME2
 
             if (newLocation.QuestAvailableHere != null)
             {
-                bool PlayerAlreadyHasQuest = false;
-                bool PlayerAlreadyCompletedQuest = false;
+                bool PlayerAlreadyHasQuest = _player.HasThisQuest(newLocation.QuestAvailableHere);
+                bool PlayerAlreadyCompletedQuest = _player.HasCompletedThisQuest(newLocation.QuestAvailableHere);
 
-                foreach (PlayerQuest playerquest in _player.PlayerQuests)
-                {
-                    if (playerquest.Details.ID == newLocation.QuestAvailableHere.ID)
-                    {
-                        PlayerAlreadyHasQuest = true;
-
-                        if (playerquest.IsCompleted)
-                        {
-                            PlayerAlreadyCompletedQuest = true;
-                        }
-                    }
-                }
                 if (PlayerAlreadyHasQuest)
                 {
                     if (!PlayerAlreadyCompletedQuest)
                     {
-                        bool PlayerHasAllItemToCompleteQuest = true;
-
-                        foreach (QuestCompletionItem qci in newLocation.QuestAvailableHere.QuestCompeltionItems)
-                        {
-                            bool FoundItemInPlayersInventory = false;
-
-                            foreach (InventoryItem II in _player.Inventory)
-                            {
-                                if (II.Details.ID == qci.Details.ID)
-                                {
-                                    FoundItemInPlayersInventory = true;
-
-                                    if (II.Quantity < qci.Quantity)
-                                    {
-                                        PlayerHasAllItemToCompleteQuest = false;
-                                        break;
-                                    }
-                                    break;
-                                }
-                            }
-                            if (!FoundItemInPlayersInventory)
-                            {
-                                PlayerHasAllItemToCompleteQuest = false;
-
-                                break;
-                            }
-                        }
+                        bool PlayerHasAllItemToCompleteQuest = _player.HasAllQuestCompletionItems(newLocation.QuestAvailableHere);
                         if (PlayerHasAllItemToCompleteQuest)
                         {
                             rtbMessage.Text += Environment.NewLine;
                             rtbMessage.Text += "You complete the '" + newLocation.QuestAvailableHere.Name + "' quest." + Environment.NewLine;
                         }
-                        foreach (QuestCompletionItem qci in newLocation.QuestAvailableHere.QuestCompeltionItems)
-                        {
-                            foreach (InventoryItem II in _player.Inventory)
-                            {
-                                if (II.Details.ID == qci.Details.ID)
-                                {
-                                    II.Quantity -= qci.Quantity;
 
-                                    break;
-                                }
-                            }
-                        }
+                        _player.RemoveQuestCompletionItem(newLocation.QuestAvailableHere);
+
                         rtbMessage.Text += "You receive: " + Environment.NewLine;
                         rtbMessage.Text += newLocation.QuestAvailableHere.RewardedXP.ToString() + " experience points" + Environment.NewLine;
                         rtbMessage.Text += newLocation.QuestAvailableHere.RewardedGold.ToString() + " gold" + Environment.NewLine;
@@ -209,35 +150,11 @@ namespace RPGGAME2
                         _player.Experience += newLocation.QuestAvailableHere.RewardedXP;
                         _player.Gold += newLocation.QuestAvailableHere.RewardedGold;
 
-                        bool AddedItemToPlayerInventory = false;
+                        _player.AddItemToInventory(newLocation.QuestAvailableHere.RewardItem);
 
-                        foreach (InventoryItem II in _player.Inventory)
-                        {
-                            if (II.Details.ID == newLocation.QuestAvailableHere.RewardItem.ID)
-                            {
-                                II.Quantity++;
-
-                                AddedItemToPlayerInventory = false;
-
-                                break;
-                            }
-                        }
-
-                        if (!AddedItemToPlayerInventory)
-                        {
-                            _player.Inventory.Add(new InventoryItem(newLocation.QuestAvailableHere.RewardItem, 1));
-                        }
-
-                        foreach (PlayerQuest pq in _player.PlayerQuests)
-                        {
-                            if (pq.Details.ID == newLocation.QuestAvailableHere.ID)
-                            {
-                                pq.IsCompleted = true;
-
-                                break;
-
-                            }
-                        }
+                       
+                        _player.MarkThisQuestCompleted(newLocation.QuestAvailableHere);
+                        
 
 
                     }
