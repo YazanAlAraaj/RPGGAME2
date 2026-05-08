@@ -6,10 +6,12 @@ using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 
 namespace RPGGAME2
@@ -23,7 +25,7 @@ namespace RPGGAME2
         public rpggame1()
         {
             InitializeComponent();
-            _player = new Player(100, 0, 1, 10, 10);
+            _player = new Player(10, 0, 1, 10, 10);
             MoveTo(World.LocationByID(World.Location_ID_Home));
             _player.Inventory.Add(new InventoryItem(World.ItemByID(World.Item_ID_Rusty_Sword), 1));
 
@@ -79,6 +81,90 @@ namespace RPGGAME2
 
         private void btnUseWeapon_Click(object sender, EventArgs e)
         {
+            Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
+            Random random = new Random();
+
+            int DamageToMonster = random.Next(currentWeapon.MinDamage, currentWeapon.MaxDamage);
+
+            _currentmonster.CurrentHP -= DamageToMonster;
+
+            rtbMessage.Text = "You hit" + _currentmonster.Name + "for" + DamageToMonster.ToString() + "Points" + Environment.NewLine;
+
+            if (_currentmonster.CurrentHP <= 0)
+            {
+                rtbMessage.Text += Environment.NewLine;
+                rtbMessage.Text += "You killed" + _currentmonster.Name + Environment.NewLine;
+
+                _player.Experience += _currentmonster.RewardedXP;
+                rtbMessage.Text += "You recieve" + _currentmonster.RewardedXP.ToString() + Environment.NewLine;
+
+                _player.Gold += _currentmonster.RewardedGold;
+                rtbMessage.Text += "You recieve" + _currentmonster.RewardedGold.ToString() + Environment.NewLine;
+
+                List<InventoryItem> LootedItems = new List<InventoryItem>();
+
+                foreach (LootItem lootitem in _currentmonster.LootTable)
+                {
+                    if (random.Next(1, 100) <= lootitem.DropPercentage)
+                    {
+                        LootedItems.Add(new InventoryItem(lootitem.Details, 1));
+                    }
+                }
+                if (LootedItems.Count == 0)
+                {
+                    foreach (LootItem lootitem in _currentmonster.LootTable)
+                    {
+                        if (lootitem.DefaultItem)
+                        {
+                            LootedItems.Add(new InventoryItem(lootitem.Details, 1));
+                        }
+
+                    }
+                }
+                foreach (InventoryItem ii in _player.Inventory)
+                {
+                    _player.AddItemToInventory(ii.Details);
+                    if (ii.Quantity == 1)
+                    {
+                        rtbMessage.Text += "You loot " + ii.Quantity.ToString() + " " + ii.Details.Name + Environment.NewLine;
+                    }
+                    else
+                    {
+                        rtbMessage.Text += "You loot " + ii.Quantity.ToString() + " " + ii.Details.NamePlural + Environment.NewLine;
+                    }
+                }
+
+                lblHitPoints.Text = _player.CurrentHP.ToString();
+                lblGold.Text = _player.Gold.ToString();
+                lblExperience.Text = _player.Experience.ToString();
+                lblLevel.Text = _player.Level.ToString();
+
+                UpdateInventoryListInUI();
+                UpdateWeaponListInUI();
+                UpdatePotionListInUI();
+
+                rtbMessage.Text += Environment.NewLine;
+
+                MoveTo(_player.CurrentLocation);
+
+            }
+            else
+            {
+                int DamageToPlayer = random.Next(0, _currentmonster.MaxDamage);
+
+                rtbMessage.Text += Environment.NewLine;
+                rtbMessage.Text = "The" + _currentmonster.Name + "Has Dealt" + _currentmonster.MaxDamage.ToString() + Environment.NewLine;
+
+                _player.CurrentHP -= DamageToPlayer;
+
+                lblHitPoints.Text = _player.CurrentHP.ToString();
+
+                if(_player.CurrentHP <= 0)
+                {
+                    rtbMessage.Text += _currentmonster.Name + "Has Killed you" + Environment.NewLine;
+                    MoveTo(World.LocationByID(World.Location_ID_Home));
+                }
+            }
 
         }
 
@@ -152,9 +238,9 @@ namespace RPGGAME2
 
                         _player.AddItemToInventory(newLocation.QuestAvailableHere.RewardItem);
 
-                       
+
                         _player.MarkThisQuestCompleted(newLocation.QuestAvailableHere);
-                        
+
 
 
                     }
@@ -207,10 +293,22 @@ namespace RPGGAME2
                 cboPotions.Visible = false;
                 btnUseWeapon.Visible = false;
                 btnUsePotion.Visible = false;
-
-
             }
+            UpdateInventoryListInUI();
 
+            UpdateQuestsListInUI();
+
+            UpdateWeaponListInUI();
+
+            UpdatePotionListInUI();
+
+        }
+
+
+
+
+        private void UpdateInventoryListInUI()
+        {
             dgvInventory.RowHeadersVisible = false;
 
             dgvInventory.ColumnCount = 2;
@@ -229,7 +327,10 @@ namespace RPGGAME2
                 }
 
             }
+        }
 
+        private void UpdateQuestsListInUI()
+        {
             dgvQuests.RowHeadersVisible = false;
 
             dgvQuests.ColumnCount = 2;
@@ -243,7 +344,10 @@ namespace RPGGAME2
             {
                 dgvQuests.Rows.Add(new[] { pq.Details.Name, pq.IsCompleted.ToString() });
             }
+        }
 
+        private void UpdateWeaponListInUI()
+        {
             List<Weapon> weapon = new List<Weapon>();
 
             foreach (InventoryItem ii in _player.Inventory)
@@ -269,7 +373,10 @@ namespace RPGGAME2
 
                 cboWeapons.SelectedIndex = 0;
             }
+        }
 
+        private void UpdatePotionListInUI()
+        {
             List<HealingPotion> healingpotion = new List<HealingPotion>();
 
             foreach (InventoryItem ii in _player.Inventory)
@@ -296,11 +403,12 @@ namespace RPGGAME2
 
                 cboPotions.SelectedIndex = 0;
             }
-
-
-
         }
+
+
     }
 }
+
+
 
 
