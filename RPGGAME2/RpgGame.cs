@@ -27,7 +27,7 @@ namespace RPGGAME2
         {
             InitializeComponent();
             _player = new Player(10, 0, 1, 10, 10);
-            MoveTo(World.LocationByID(World.Location_ID_GraveYard));
+            MoveTo(World.LocationByID(World.Location_ID_Home));
             _player.Inventory.Add(new InventoryItem(World.ItemByID(World.Item_ID_Rusty_Sword), 1));
 
 
@@ -78,7 +78,7 @@ namespace RPGGAME2
             btnSouth.Visible = newLocation.LocationToSouth != null;
             btnWest.Visible = newLocation.LocationToWest != null;
 
-            rtbLocation.Text = newLocation.Name + Environment.NewLine;
+            rtbLocation.Text += newLocation.Name + Environment.NewLine;
             rtbLocation.Text += newLocation.Description + Environment.NewLine;
 
             _player.CurrentHP = _player.MaxHP;
@@ -139,7 +139,7 @@ namespace RPGGAME2
                             rtbMessage.Text += qci.Quantity.ToString() + " " + qci.Details.NamePlural + Environment.NewLine;
                         }
                     }
-                    rtbMessage.Text = Environment.NewLine;
+                    rtbMessage.Text += Environment.NewLine;
                 }
             }
 

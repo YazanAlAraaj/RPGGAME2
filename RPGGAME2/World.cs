@@ -75,10 +75,10 @@ namespace RPGGAME2
             Location TownSquare = new Location(Location_ID_TownSquare, "Town Square", "Welcome to the town square you see a fountain");
             Location GraveYard = new Location(Location_ID_GraveYard, "Grave Yard", "This Grave Yard is guarded by a warrior!");
             //Location headings 2nd
-            Home.LocationToNorth = LocationByID(Location_ID_TownSquare);
-            TownSquare.LocationToSouth = LocationByID(Location_ID_Home);
-            TownSquare.LocationToNorth = LocationByID(Location_ID_GraveYard);
-            GraveYard.LocationToSouth = LocationByID(Location_ID_TownSquare);
+            Home.LocationToNorth = TownSquare;
+            TownSquare.LocationToSouth = Home;
+            TownSquare.LocationToNorth = GraveYard;
+            GraveYard.LocationToSouth = TownSquare;
             //Monsters in location 3rd
             TownSquare.MonsterLivingHere = MonsterByID(Monster_ID_Rat);
             TownSquare.QuestAvailableHere = QuestByID(Quest_ID_Clear_TownSquare);

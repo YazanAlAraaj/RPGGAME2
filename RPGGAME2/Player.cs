@@ -120,6 +120,7 @@ namespace RPGGAME2
                     return;
                 }
             }
+            Inventory.Add(new InventoryItem(ItemToAdd, 1));
         }
 
         public void MarkThisQuestCompleted(Quest quest)
