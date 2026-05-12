@@ -6,6 +6,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -26,7 +27,7 @@ namespace RPGGAME2
         {
             InitializeComponent();
             _player = new Player(10, 0, 1, 10, 10);
-            MoveTo(World.LocationByID(World.Location_ID_Home));
+            MoveTo(World.LocationByID(World.Location_ID_GraveYard));
             _player.Inventory.Add(new InventoryItem(World.ItemByID(World.Item_ID_Rusty_Sword), 1));
 
 
@@ -37,138 +38,7 @@ namespace RPGGAME2
 
 
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblExperience_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblHitPoints_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblEquipment_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cboWeapons1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void cboPotions_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void btnUsePotion_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void btnUseWeapon_Click(object sender, EventArgs e)
-        {
-            Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
-            Random random = new Random();
-
-            int DamageToMonster = random.Next(currentWeapon.MinDamage, currentWeapon.MaxDamage);
-
-            _currentmonster.CurrentHP -= DamageToMonster;
-
-            rtbMessage.Text = "You hit" + _currentmonster.Name + "for" + DamageToMonster.ToString() + "Points" + Environment.NewLine;
-
-            if (_currentmonster.CurrentHP <= 0)
-            {
-                rtbMessage.Text += Environment.NewLine;
-                rtbMessage.Text += "You killed" + _currentmonster.Name + Environment.NewLine;
-
-                _player.Experience += _currentmonster.RewardedXP;
-                rtbMessage.Text += "You recieve" + _currentmonster.RewardedXP.ToString() + Environment.NewLine;
-
-                _player.Gold += _currentmonster.RewardedGold;
-                rtbMessage.Text += "You recieve" + _currentmonster.RewardedGold.ToString() + Environment.NewLine;
-
-                List<InventoryItem> LootedItems = new List<InventoryItem>();
-
-                foreach (LootItem lootitem in _currentmonster.LootTable)
-                {
-                    if (random.Next(1, 100) <= lootitem.DropPercentage)
-                    {
-                        LootedItems.Add(new InventoryItem(lootitem.Details, 1));
-                    }
-                }
-                if (LootedItems.Count == 0)
-                {
-                    foreach (LootItem lootitem in _currentmonster.LootTable)
-                    {
-                        if (lootitem.DefaultItem)
-                        {
-                            LootedItems.Add(new InventoryItem(lootitem.Details, 1));
-                        }
-
-                    }
-                }
-                foreach (InventoryItem ii in _player.Inventory)
-                {
-                    _player.AddItemToInventory(ii.Details);
-                    if (ii.Quantity == 1)
-                    {
-                        rtbMessage.Text += "You loot " + ii.Quantity.ToString() + " " + ii.Details.Name + Environment.NewLine;
-                    }
-                    else
-                    {
-                        rtbMessage.Text += "You loot " + ii.Quantity.ToString() + " " + ii.Details.NamePlural + Environment.NewLine;
-                    }
-                }
-
-                lblHitPoints.Text = _player.CurrentHP.ToString();
-                lblGold.Text = _player.Gold.ToString();
-                lblExperience.Text = _player.Experience.ToString();
-                lblLevel.Text = _player.Level.ToString();
-
-                UpdateInventoryListInUI();
-                UpdateWeaponListInUI();
-                UpdatePotionListInUI();
-
-                rtbMessage.Text += Environment.NewLine;
-
-                MoveTo(_player.CurrentLocation);
-
-            }
-            else
-            {
-                int DamageToPlayer = random.Next(0, _currentmonster.MaxDamage);
-
-                rtbMessage.Text += Environment.NewLine;
-                rtbMessage.Text = "The" + _currentmonster.Name + "Has Dealt" + _currentmonster.MaxDamage.ToString() + Environment.NewLine;
-
-                _player.CurrentHP -= DamageToPlayer;
-
-                lblHitPoints.Text = _player.CurrentHP.ToString();
-
-                if(_player.CurrentHP <= 0)
-                {
-                    rtbMessage.Text += _currentmonster.Name + "Has Killed you" + Environment.NewLine;
-                    MoveTo(World.LocationByID(World.Location_ID_Home));
-                }
-            }
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
+        private void btnNorth_Click(object sender, EventArgs e)
         {
             MoveTo(_player.CurrentLocation.LocationToNorth);
         }
@@ -188,6 +58,12 @@ namespace RPGGAME2
             MoveTo(_player.CurrentLocation.LocationToSouth);
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
         private void MoveTo(Location newLocation)
         {
             if (!_player.HasRequiredItemToEnterThisLocation(newLocation))
@@ -197,10 +73,10 @@ namespace RPGGAME2
 
             _player.CurrentLocation = newLocation;
 
-            btnNorth.Visible = (newLocation.LocationToNorth != null);
-            btnEast.Visible = (newLocation.LocationToEast != null);
-            btnSouth.Visible = (newLocation.LocationToSouth != null);
-            btnWest.Visible = (newLocation.LocationToWest != null);
+            btnNorth.Visible = newLocation.LocationToNorth != null;
+            btnEast.Visible = newLocation.LocationToEast != null;
+            btnSouth.Visible = newLocation.LocationToSouth != null;
+            btnWest.Visible = newLocation.LocationToWest != null;
 
             rtbLocation.Text = newLocation.Name + Environment.NewLine;
             rtbLocation.Text += newLocation.Description + Environment.NewLine;
@@ -304,7 +180,134 @@ namespace RPGGAME2
 
         }
 
+        private void btnUsePotion_Click(object sender, EventArgs e)
+        {
+            HealingPotion currenthealingpotion = (HealingPotion)cboPotions.SelectedItem;
+            Random random = new Random();
 
+            _player.CurrentHP += (_player.CurrentHP + currenthealingpotion.AmountToHeal);
+
+            if (_player.CurrentHP > _player.MaxHP)
+            {
+                _player.CurrentHP = _player.MaxHP;
+            }
+            foreach (InventoryItem ii in _player.Inventory)
+            {
+                if (ii.Details.ID == currenthealingpotion.ID)
+                {
+                    ii.Quantity--;
+                    break;
+                }
+            }
+            rtbMessage.Text += "You drink a " + currenthealingpotion.Name + Environment.NewLine;
+
+            int damageToPlayer = random.Next(0, _currentmonster.MaxDamage);
+
+            rtbMessage.Text += "The " + _currentmonster.Name + " did " + damageToPlayer.ToString() + " points of damage." + Environment.NewLine;
+
+            _player.MaxHP -= damageToPlayer;
+
+            if (_player.MaxHP <= 0)
+            {
+                rtbMessage.Text += "The " + _currentmonster.Name + " killed you." + Environment.NewLine;
+                MoveTo(World.LocationByID(World.Location_ID_Home));
+            }
+            lblHitPoints.Text += _player.CurrentHP.ToString();
+
+            UpdateInventoryListInUI();
+
+            UpdatePotionListInUI();
+        }
+
+
+        private void btnUseWeapon_Click(object sender, EventArgs e)
+        {
+            Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
+            Random random = new Random();
+
+            int DamageToMonster = random.Next(currentWeapon.MinDamage, currentWeapon.MaxDamage);
+
+            _currentmonster.CurrentHP -= DamageToMonster;
+
+            rtbMessage.Text = "You hit" + _currentmonster.Name + "for" + DamageToMonster.ToString() + "Points" + Environment.NewLine;
+
+            if (_currentmonster.CurrentHP <= 0)
+            {
+                rtbMessage.Text += Environment.NewLine;
+                rtbMessage.Text += "You killed" + _currentmonster.Name + Environment.NewLine;
+
+                _player.Experience += _currentmonster.RewardedXP;
+                rtbMessage.Text += "You recieve" + _currentmonster.RewardedXP.ToString() + Environment.NewLine;
+
+                _player.Gold += _currentmonster.RewardedGold;
+                rtbMessage.Text += "You recieve" + _currentmonster.RewardedGold.ToString() + Environment.NewLine;
+
+                List<InventoryItem> LootedItems = new List<InventoryItem>();
+
+                foreach (LootItem lootitem in _currentmonster.LootTable)
+                {
+                    if (random.Next(1, 100) <= lootitem.DropPercentage)
+                    {
+                        LootedItems.Add(new InventoryItem(lootitem.Details, 1));
+                    }
+                }
+                if (LootedItems.Count == 0)
+                {
+                    foreach (LootItem lootitem in _currentmonster.LootTable)
+                    {
+                        if (lootitem.DefaultItem)
+                        {
+                            LootedItems.Add(new InventoryItem(lootitem.Details, 1));
+                        }
+
+                    }
+                }
+                foreach (InventoryItem ii in _player.Inventory)
+                {
+                    _player.AddItemToInventory(ii.Details);
+                    if (ii.Quantity == 1)
+                    {
+                        rtbMessage.Text += "You loot " + ii.Quantity.ToString() + " " + ii.Details.Name + Environment.NewLine;
+                    }
+                    else
+                    {
+                        rtbMessage.Text += "You loot " + ii.Quantity.ToString() + " " + ii.Details.NamePlural + Environment.NewLine;
+                    }
+                }
+
+                lblHitPoints.Text = _player.CurrentHP.ToString();
+                lblGold.Text = _player.Gold.ToString();
+                lblExperience.Text = _player.Experience.ToString();
+                lblLevel.Text = _player.Level.ToString();
+
+                UpdateInventoryListInUI();
+                UpdateWeaponListInUI();
+                UpdatePotionListInUI();
+
+                rtbMessage.Text += Environment.NewLine;
+
+                MoveTo(_player.CurrentLocation);
+
+            }
+            else
+            {
+                int DamageToPlayer = random.Next(0, _currentmonster.MaxDamage);
+
+                rtbMessage.Text += Environment.NewLine;
+                rtbMessage.Text = "The" + _currentmonster.Name + "Has Dealt" + _currentmonster.MaxDamage.ToString() + Environment.NewLine;
+
+                _player.CurrentHP -= DamageToPlayer;
+
+                lblHitPoints.Text = _player.CurrentHP.ToString();
+
+                if (_player.CurrentHP <= 0)
+                {
+                    rtbMessage.Text += _currentmonster.Name + "Has Killed you" + Environment.NewLine;
+                    MoveTo(World.LocationByID(World.Location_ID_Home));
+                }
+            }
+
+        }
 
 
         private void UpdateInventoryListInUI()
@@ -404,7 +407,36 @@ namespace RPGGAME2
                 cboPotions.SelectedIndex = 0;
             }
         }
+        private void label3_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void lblExperience_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblHitPoints_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblEquipment_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboWeapons1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void cboPotions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
 
     }
 }
