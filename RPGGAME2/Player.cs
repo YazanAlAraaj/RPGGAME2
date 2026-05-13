@@ -126,16 +126,16 @@ namespace RPGGAME2
         public void MarkThisQuestCompleted(Quest quest)
         {
 
-            foreach(PlayerQuest pq in PlayerQuests)
+            foreach (PlayerQuest pq in PlayerQuests)
             {
-                if(pq.Details.ID == quest.ID)
+                if (pq.Details.ID == quest.ID)
                 {
                     pq.IsCompleted = true;
                     return;
                 }
             }
-            
-            
+
+
         }
     }
 }

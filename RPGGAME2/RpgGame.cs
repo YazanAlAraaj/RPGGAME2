@@ -68,7 +68,7 @@ namespace RPGGAME2
         {
             if (!_player.HasRequiredItemToEnterThisLocation(newLocation))
             {
-                rtbMessage.Text = "You must have" + newLocation.ItemRequiredToEnter.Name + "to enter this location" + Environment.NewLine;
+                rtbMessage.Text += "You must have" + newLocation.ItemRequiredToEnter.Name + "to enter this location" + Environment.NewLine;
             }
 
             _player.CurrentLocation = newLocation;
@@ -85,8 +85,12 @@ namespace RPGGAME2
 
             lblHitPoints.Text = _player.CurrentHP.ToString();
 
+     
+
             if (newLocation.QuestAvailableHere != null)
             {
+
+                _player.PlayerQuests.Add(new PlayerQuest(newLocation.QuestAvailableHere,false));
                 bool PlayerAlreadyHasQuest = _player.HasThisQuest(newLocation.QuestAvailableHere);
                 bool PlayerAlreadyCompletedQuest = _player.HasCompletedThisQuest(newLocation.QuestAvailableHere);
 
@@ -185,7 +189,7 @@ namespace RPGGAME2
             HealingPotion currenthealingpotion = (HealingPotion)cboPotions.SelectedItem;
             Random random = new Random();
 
-            _player.CurrentHP += (_player.CurrentHP + currenthealingpotion.AmountToHeal);
+            _player.CurrentHP = (_player.CurrentHP + currenthealingpotion.AmountToHeal);
 
             if (_player.CurrentHP > _player.MaxHP)
             {
@@ -205,7 +209,7 @@ namespace RPGGAME2
 
             rtbMessage.Text += "The " + _currentmonster.Name + " did " + damageToPlayer.ToString() + " points of damage." + Environment.NewLine;
 
-            _player.MaxHP -= damageToPlayer;
+            _player.CurrentHP -= damageToPlayer;
 
             if (_player.MaxHP <= 0)
             {
@@ -229,7 +233,7 @@ namespace RPGGAME2
 
             _currentmonster.CurrentHP -= DamageToMonster;
 
-            rtbMessage.Text = "You hit" + _currentmonster.Name + "for" + DamageToMonster.ToString() + "Points" + Environment.NewLine;
+            rtbMessage.Text += "You hit" + _currentmonster.Name + "for" + DamageToMonster.ToString() + "Points" + Environment.NewLine;
 
             if (_currentmonster.CurrentHP <= 0)
             {
@@ -262,7 +266,7 @@ namespace RPGGAME2
 
                     }
                 }
-                foreach (InventoryItem ii in _player.Inventory)
+                foreach (InventoryItem ii in LootedItems)
                 {
                     _player.AddItemToInventory(ii.Details);
                     if (ii.Quantity == 1)
