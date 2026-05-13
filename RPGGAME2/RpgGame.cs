@@ -69,6 +69,7 @@ namespace RPGGAME2
             if (!_player.HasRequiredItemToEnterThisLocation(newLocation))
             {
                 rtbMessage.Text += "You must have" + newLocation.ItemRequiredToEnter.Name + "to enter this location" + Environment.NewLine;
+                return;
             }
 
             _player.CurrentLocation = newLocation;
@@ -78,19 +79,13 @@ namespace RPGGAME2
             btnSouth.Visible = newLocation.LocationToSouth != null;
             btnWest.Visible = newLocation.LocationToWest != null;
 
-            rtbLocation.Text += newLocation.Name + Environment.NewLine;
+            rtbLocation.Text = newLocation.Name + Environment.NewLine;
             rtbLocation.Text += newLocation.Description + Environment.NewLine;
-
-            _player.CurrentHP = _player.MaxHP;
 
             lblHitPoints.Text = _player.CurrentHP.ToString();
 
-     
-
             if (newLocation.QuestAvailableHere != null)
             {
-
-                _player.PlayerQuests.Add(new PlayerQuest(newLocation.QuestAvailableHere,false));
                 bool PlayerAlreadyHasQuest = _player.HasThisQuest(newLocation.QuestAvailableHere);
                 bool PlayerAlreadyCompletedQuest = _player.HasCompletedThisQuest(newLocation.QuestAvailableHere);
 
@@ -103,30 +98,29 @@ namespace RPGGAME2
                         {
                             rtbMessage.Text += Environment.NewLine;
                             rtbMessage.Text += "You complete the '" + newLocation.QuestAvailableHere.Name + "' quest." + Environment.NewLine;
+                            _player.RemoveQuestCompletionItem(newLocation.QuestAvailableHere);
+
+                            rtbMessage.Text += "You receive: " + Environment.NewLine;
+                            rtbMessage.Text += newLocation.QuestAvailableHere.RewardedXP.ToString() + " experience points" + Environment.NewLine;
+                            rtbMessage.Text += newLocation.QuestAvailableHere.RewardedGold.ToString() + " gold" + Environment.NewLine;
+                            rtbMessage.Text += newLocation.QuestAvailableHere.RewardItem.Name + Environment.NewLine;
+                            rtbMessage.Text += Environment.NewLine;
+
+                            _player.Experience += newLocation.QuestAvailableHere.RewardedXP;
+                            _player.Gold += newLocation.QuestAvailableHere.RewardedGold;
+
+                            _player.AddItemToInventory(newLocation.QuestAvailableHere.RewardItem);
+
+
+                            _player.MarkThisQuestCompleted(newLocation.QuestAvailableHere);
                         }
-
-                        _player.RemoveQuestCompletionItem(newLocation.QuestAvailableHere);
-
-                        rtbMessage.Text += "You receive: " + Environment.NewLine;
-                        rtbMessage.Text += newLocation.QuestAvailableHere.RewardedXP.ToString() + " experience points" + Environment.NewLine;
-                        rtbMessage.Text += newLocation.QuestAvailableHere.RewardedGold.ToString() + " gold" + Environment.NewLine;
-                        rtbMessage.Text += newLocation.QuestAvailableHere.RewardItem.Name + Environment.NewLine;
-                        rtbMessage.Text += Environment.NewLine;
-
-                        _player.Experience += newLocation.QuestAvailableHere.RewardedXP;
-                        _player.Gold += newLocation.QuestAvailableHere.RewardedGold;
-
-                        _player.AddItemToInventory(newLocation.QuestAvailableHere.RewardItem);
-
-
-                        _player.MarkThisQuestCompleted(newLocation.QuestAvailableHere);
-
 
 
                     }
                 }
                 else
                 {
+                    _player.PlayerQuests.Add(new PlayerQuest(newLocation.QuestAvailableHere, false));
                     rtbMessage.Text += "You Recieve The" + newLocation.QuestAvailableHere.Name + "Quest" + Environment.NewLine;
                     rtbMessage.Text += newLocation.QuestAvailableHere.Description;
                     rtbMessage.Text += "To complete it return with: " + Environment.NewLine;
@@ -229,13 +223,13 @@ namespace RPGGAME2
             Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
             Random random = new Random();
 
-            int DamageToMonster = random.Next(currentWeapon.MinDamage, currentWeapon.MaxDamage);
+            int DamageToMonster = random.Next(currentWeapon.MinDamage, currentWeapon.MaxDamage);//G
 
-            _currentmonster.CurrentHP -= DamageToMonster;
+            _currentmonster.CurrentHP -= DamageToMonster;//G
 
-            rtbMessage.Text += "You hit" + _currentmonster.Name + "for" + DamageToMonster.ToString() + "Points" + Environment.NewLine;
+            rtbMessage.Text += "You hit" + _currentmonster.Name + "for" + DamageToMonster.ToString() + "Points" + Environment.NewLine; //M
 
-            if (_currentmonster.CurrentHP <= 0)
+            if (_currentmonster.CurrentHP <= 0)//G
             {
                 rtbMessage.Text += Environment.NewLine;
                 rtbMessage.Text += "You killed" + _currentmonster.Name + Environment.NewLine;

@@ -74,6 +74,7 @@ namespace RPGGAME2
             foreach (QuestCompletionItem qci in quest.QuestCompeltionItems)
             {
                 bool FoundItemInPlayerInventory = false;
+
                 foreach (InventoryItem ii in Inventory)
                 {
                     if (ii.Details.ID == qci.Details.ID)

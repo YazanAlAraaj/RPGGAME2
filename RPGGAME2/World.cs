@@ -84,12 +84,13 @@ namespace RPGGAME2
             TownSquare.QuestAvailableHere = QuestByID(Quest_ID_Clear_TownSquare);
             GraveYard.MonsterLivingHere = MonsterByID(Monster_ID_Warrior);
             GraveYard.QuestAvailableHere = QuestByID(Quest_ID_Kill_The_Warrior);
+            
             //Then we ADD them
             Locations.Add(Home);
             Locations.Add(TownSquare);
             Locations.Add(GraveYard);
-        }
 
+        }
 
         private static void PopulateMonsters()
         {
